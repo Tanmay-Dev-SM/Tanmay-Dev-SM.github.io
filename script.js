@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Navbar section switching
   const navLinks = document.querySelectorAll(".nav-link");
   const sections = document.querySelectorAll(".section");
 
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Toggle employment details
   document.querySelectorAll(".toggle-details").forEach((button) => {
     button.addEventListener("click", () => {
       const desc = button.nextElementSibling;
@@ -31,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Smooth scroll navigation
   function goToSection(targetId) {
     const targetSection = document.getElementById(targetId);
     if (targetSection) {
@@ -55,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Scroll hints
   const scrollHints = {
     home: "Click to go to Work →",
     work: "Click to see Projects →",
@@ -75,47 +79,54 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollBtn.insertAdjacentElement("afterend", hint);
   });
 
-  document.querySelectorAll(".employment-entry").forEach((entry) => {
-    const tags = entry.querySelector(".tags");
-    if (tags) tags.style.display = "flex";
-  });
-});
+  // Image Carousel Logic
+  document.querySelectorAll("[data-carousel]").forEach((carouselWrapper) => {
+    const carousel = carouselWrapper.querySelector(".carousel");
+    const images = carousel.querySelectorAll("img");
+    let currentIndex = 0;
 
-// Image Carousel Logic
-document.querySelectorAll("[data-carousel]").forEach((carouselWrapper) => {
-  const carousel = carouselWrapper.querySelector(".carousel");
-  const images = carousel.querySelectorAll("img");
-  let currentIndex = 0;
+    const updateCarousel = () => {
+      const width = carouselWrapper.clientWidth;
+      carousel.style.transform = `translateX(-${currentIndex * width}px)`;
+    };
 
-  const updateCarousel = () => {
-    const width = carouselWrapper.clientWidth;
-    carousel.style.transform = `translateX(-${currentIndex * width}px)`;
-  };
+    carouselWrapper.querySelector(".next")?.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateCarousel();
+    });
 
-  carouselWrapper.querySelector(".next").addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % images.length;
+    carouselWrapper.querySelector(".prev")?.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateCarousel();
+    });
+
+    window.addEventListener("resize", updateCarousel);
     updateCarousel();
   });
 
-  carouselWrapper.querySelector(".prev").addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    updateCarousel();
+  // Zoomable image lightbox
+  const zoomables = document.querySelectorAll(".zoomable");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+
+  zoomables.forEach((img) => {
+    img.addEventListener("click", () => {
+      lightboxImg.src = img.src;
+      lightbox.style.display = "flex";
+    });
   });
 
-  window.addEventListener("resize", updateCarousel);
-  updateCarousel();
-});
-
-// Zoomable image lightbox
-document.querySelectorAll(".zoomable").forEach((img) => {
-  img.addEventListener("click", () => {
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightbox-img");
-    lightboxImg.src = img.src;
-    lightbox.style.display = "flex";
+  lightbox?.addEventListener("click", () => {
+    lightbox.style.display = "none";
   });
-});
 
-document.getElementById("lightbox").addEventListener("click", () => {
-  document.getElementById("lightbox").style.display = "none";
+  // Tooltip toggle (no extra listener needed)
+  const helperBtn = document.getElementById("helper-button");
+  const helperTooltip = document.getElementById("helper-tooltip");
+
+  if (helperBtn && helperTooltip) {
+    helperBtn.addEventListener("click", () => {
+      helperTooltip.classList.toggle("collapsed");
+    });
+  }
 });
